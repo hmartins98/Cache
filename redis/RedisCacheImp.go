@@ -10,7 +10,7 @@ import (
 
 //Get TODO
 func (c *Cache) Get(key string, obj interface{}) error {
-	val, err := c.cluster.Get(key).Result()
+	val, err := c.Cluster.Get(key).Result()
 	if err == redis.Nil || err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func (c *Cache) Set(key string, obj interface{}, expiration time.Duration) error
 	if err != nil {
 		return err
 	}
-	err = c.cluster.Set(key, cacheEntry, expiration).Err()
+	err = c.Cluster.Set(key, cacheEntry, expiration).Err()
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (c *Cache) Set(key string, obj interface{}, expiration time.Duration) error
 
 //Delete TODO
 func (c *Cache) Delete(key string) {
-	err := c.cluster.Del(key)
+	err := c.Cluster.Del(key)
 
 	if err != nil {
 		fmt.Printf("Error deleting key: %v", key)
