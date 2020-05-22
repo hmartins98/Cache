@@ -3,6 +3,7 @@ package redis
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -16,6 +17,7 @@ func (c *Cache) Get(key string, obj interface{}) error {
 	}
 
 	err = json.Unmarshal([]byte(val), &obj)
+	log.Printf("Get: %v", obj)
 	if err != nil {
 		return err
 	}
@@ -24,6 +26,7 @@ func (c *Cache) Get(key string, obj interface{}) error {
 
 //Set TODO
 func (c *Cache) Set(key string, obj interface{}, expiration time.Duration) error {
+	log.Printf("Set: %v", obj)
 	cacheEntry, err := json.Marshal(obj)
 	if err != nil {
 		return err
