@@ -10,7 +10,7 @@ import (
 )
 
 //Get TODO
-func (c *Cache) Get(key string, obj interface{}) error {
+func (c *Cache) Get(key string, obj *interface{}) error {
 	val, err := c.Cluster.Get(key).Result()
 	if err == redis.Nil || err != nil {
 		return err
@@ -25,7 +25,7 @@ func (c *Cache) Get(key string, obj interface{}) error {
 }
 
 //Set TODO
-func (c *Cache) Set(key string, obj interface{}, expiration time.Duration) error {
+func (c *Cache) Set(key string, obj *interface{}, expiration time.Duration) error {
 	log.Printf("Set: %v", obj)
 	cacheEntry, err := json.Marshal(obj)
 	if err != nil {
