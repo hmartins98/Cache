@@ -1,35 +1,25 @@
 package redis
 
 import (
-	"github.com/go-redis/cache"
 	"github.com/go-redis/redis"
-	"github.com/vmihailenco/msgpack"
 )
 
-//Cache TODO
+//Cache struct
 type Cache struct {
-	cache *cache.Codec
-	ring  *redis.Ring
+	cluster *redis.ClusterClient
 }
 
-//OpenCacheConnection TODO
-func (c *Cache) OpenCacheConnection() {
-	c.ring = redis.NewRing(&redis.RingOptions{
-		Addrs: map[string]string{
-			"redis": "6379",
-			// "server2": "6380",
-		},
+//GetClient get the redis client
+func (c *Cache) initialize(addrs []string) {
+	c.cluster = redis.NewClusterClient(&redis.ClusterOptions{
+		Addrs: addrs,
 	})
-
-	c.cache = &cache.Codec{
-		Redis: c.ring,
-
-		Marshal:   msgpack.Marshal,
-		Unmarshal: msgpack.Unmarshal,
+	if err := c.cluster.Ping().Err(); err != nil {
+		panic("Unable to connect to redis " + err.Error())
 	}
 }
 
 //CloseCacheConnection TODO
 func (c *Cache) CloseCacheConnection() {
-	c.ring.Close()
+	c.cluster.Close()
 }
