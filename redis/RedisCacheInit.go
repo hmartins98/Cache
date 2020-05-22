@@ -9,8 +9,8 @@ type Cache struct {
 	cluster *redis.ClusterClient
 }
 
-//GetClient get the redis client
-func (c *Cache) initialize(addrs []string) {
+//Initialize init
+func (c *Cache) Initialize(addrs []string) {
 	c.cluster = redis.NewClusterClient(&redis.ClusterOptions{
 		Addrs: addrs,
 	})
@@ -19,7 +19,7 @@ func (c *Cache) initialize(addrs []string) {
 	}
 }
 
-//CloseCacheConnection TODO
-func (c *Cache) CloseCacheConnection() {
+//Close TODO
+func (c *Cache) Close() {
 	c.cluster.Close()
 }

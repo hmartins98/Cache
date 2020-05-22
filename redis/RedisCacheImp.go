@@ -37,7 +37,7 @@ func (c *Cache) Set(key string, obj interface{}, expiration time.Duration) error
 
 //Delete TODO
 func (c *Cache) Delete(key string) {
-	err := c.cluster.Delete(key)
+	err := c.cluster.Del(key)
 
 	if err != nil {
 		fmt.Printf("Error deleting key: %v", key)
