@@ -1,23 +1,23 @@
 package redis
 
 import (
+	"bytes"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/go-redis/redis"
 )
 
 //Get TODO
-func (c *Cache) Get(key string, obj *interface{}) error {
+func (c *Cache) Get(key string, obj interface{}) error {
 	val, err := c.Cluster.Get(key).Result()
 	if err == redis.Nil || err != nil {
 		return err
 	}
 
 	err = json.Unmarshal([]byte(val), &obj)
-	log.Printf("Get: %v", obj)
 	if err != nil {
 		return err
 	}
@@ -25,14 +25,14 @@ func (c *Cache) Get(key string, obj *interface{}) error {
 }
 
 //Set TODO
-func (c *Cache) Set(key string, obj *interface{}, expiration time.Duration) error {
-	log.Printf("Set: %v", obj)
-	cacheEntry, err := json.Marshal(obj)
-	if err != nil {
+func (c *Cache) Set(key string, obj interface{}, expiration time.Duration) error {
+	b := new(bytes.Buffer)
+
+	if err := gob.NewEncoder(b).Encode(obj); err != nil {
 		return err
 	}
-	err = c.Cluster.Set(key, cacheEntry, expiration).Err()
-	if err != nil {
+
+	if err := c.Cluster.Set(key, b.Bytes(), expiration).Err(); err != nil {
 		return err
 	}
 	return nil
