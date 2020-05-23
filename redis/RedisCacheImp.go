@@ -3,7 +3,6 @@ package redis
 import (
 	"bytes"
 	"encoding/gob"
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -12,13 +11,15 @@ import (
 
 //Get TODO
 func (c *Cache) Get(key string, obj interface{}) error {
+
 	val, err := c.Cluster.Get(key).Result()
 	if err == redis.Nil || err != nil {
 		return err
 	}
 
-	err = json.Unmarshal([]byte(val), &obj)
-	if err != nil {
+	b := bytes.NewBuffer([]byte(val))
+
+	if err := gob.NewDecoder(b).Decode(&obj); err != nil {
 		return err
 	}
 	return nil

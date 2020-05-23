@@ -15,9 +15,9 @@ func (c *Cache) Initialize() {
 	c.Cluster = redis.NewClusterClient(&redis.ClusterOptions{
 		Addrs: c.Addrs,
 	})
-	// if err := c.Cluster.Ping().Err(); err != nil {
-	// 	panic("Unable to connect to redis " + err.Error())
-	// }
+	if err := c.Cluster.Ping().Err(); err != nil {
+		panic("Unable to connect to redis " + err.Error())
+	}
 }
 
 //Close TODO
