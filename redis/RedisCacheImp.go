@@ -10,19 +10,6 @@ import (
 
 //Get TODO
 func (c *Cache) Get(key string, obj interface{}) error {
-
-	// val, err := c.Cluster.Get(key).Result()
-	// if err == redis.Nil || err != nil {
-	// 	return err
-	// }
-
-	// b := bytes.NewBuffer([]byte(val))
-
-	// if err := gob.NewDecoder(b).Decode(&obj); err != nil {
-	// 	return err
-	// }
-	// return nil
-
 	val, err := c.Cluster.Get(key).Result()
 	if err == redis.Nil || err != nil {
 		return err
@@ -36,12 +23,6 @@ func (c *Cache) Get(key string, obj interface{}) error {
 
 //Set TODO
 func (c *Cache) Set(key string, obj interface{}, expiration time.Duration) error {
-	// b := new(bytes.Buffer)
-
-	// if err := gob.NewEncoder(b).Encode(obj); err != nil {
-	// 	return err
-	// }
-
 	b, err := json.Marshal(obj)
 	if err != nil {
 		return err
